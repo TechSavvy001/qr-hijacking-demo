@@ -1,4 +1,4 @@
-# 🕵️‍♀️ QR-Code-Hijacking – Vertrauen in Schwarz-Weiß
+# QR-Code-Hijacking – Vertrauen in Schwarz-Weiß
 
 Ein Uni-Projekt zur Demonstration, wie einfach QR-Codes im Alltag manipuliert und missbraucht werden können.  
 Wir zeigen, wie ein vermeintlich harmloser QR-Code auf Fake-Seiten, Tracking-Mechanismen oder Social-Engineering-Angriffe führen kann – **rein zu Forschungs- und Aufklärungszwecken**.
