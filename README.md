@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🕵️‍♀️ QR-Code-Hijacking – Vertrauen in Schwarz-Weiß
 
-## Getting Started
+Ein Uni-Projekt zur Demonstration, wie einfach QR-Codes im Alltag manipuliert und missbraucht werden können.  
+Wir zeigen, wie ein vermeintlich harmloser QR-Code auf Fake-Seiten, Tracking-Mechanismen oder Social-Engineering-Angriffe führen kann – **rein zu Forschungs- und Aufklärungszwecken**.
 
-First, run the development server:
+---
+
+## Projekt-Setup
+
+### Voraussetzungen
+
+- Node.js 18 oder höher
+- Git
+- Internetverbindung
+- Supabase-Zugang (wird gestellt)
+
+---
+
+## Abhängigkeiten installieren
+
+Du hast zwei Möglichkeiten:
+
+### Standard (empfohlen)
+
+Installiere alle benötigten Pakete mit einem einzigen Befehl aus der `package.json`:
+
+```bash
+npm install
+```
+
+### Manuelle Installation (optional – falls nötig)
+
+Falls du die Pakete einzeln installieren möchtest, z. B. bei Problemen oder einem neuen Setup:
+
+**Next.js + React + React-DOM**
+
+```bash
+npm install next react react-dom
+```
+
+**TailwindCSS + PostCSS + Autoprefixer**
+
+```bash
+npm install tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+> Dadurch werden die Dateien `tailwind.config.js` und `postcss.config.js` erstellt.
+
+**Shadcn UI**
+
+```bash
+npx shadcn-ui@latest init
+```
+
+**Supabase-Client**
+
+```bash
+npm install @supabase/supabase-js
+```
+
+**`bcryptjs`**
+
+```bash
+npm install bcryptjs
+npm install --save-dev @types/bcryptjs
+```
+
+---
+
+### `.env.local` erstellen
+
+Lege im Projektverzeichnis eine Datei namens `.env.local` an mit folgendem Inhalt:
+
+```bash
+SUPABASE_URL=https://dein-projekt.supabase.co
+SUPABASE_ANON_KEY=dein-anon-key
+DATABASE_URL=postgresql://postgres:passwort@host.supabase.co:5432/postgres
+```
+
+## Projekt starten
+
+Sobald alle Pakete installiert und die `.env.local` eingerichtet ist, kannst du das Projekt starten mit:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Hinweis
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> Dieses Projekt dient ausschließlich zu Forschungs- und Lehrzwecken im Rahmen eines Hochschulprojekts.
+> Es werden keine echten Passwörter oder Nutzerdaten gespeichert.
+> Alle simulierten Angriffe sind rein demonstrativ und gesichert gegen Missbrauch.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Projektteam
 
-To learn more about Next.js, take a look at the following resources:
+- Katharina Bäuml
+- Juliane Hübner
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Hochschule / Semester
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fachbereich Wirtschaftsinformatik - Schwerpunkt Software Engineering
+Seminar „Cybersecurity Awareness & Angriffsmodelle“
+Sommersemester 2025
