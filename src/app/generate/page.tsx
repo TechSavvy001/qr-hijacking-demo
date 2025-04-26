@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 
 export default function QRGeneratorPage() {
   const [url, setUrl] = useState('');
@@ -63,7 +63,7 @@ export default function QRGeneratorPage() {
                 </a>
               </p>
               <div className="flex flex-col items-center gap-2">
-                <QRCode value={shortUrl} size={200} />
+              <QRCodeCanvas value={shortUrl} size={200} />
                 <Button variant="outline" onClick={downloadQR}>
                   QR-Code herunterladen
                 </Button>
