@@ -108,7 +108,7 @@ export default function McDStyledPage() {
 
   // Seitenverlassen (Abbrucherkennung)
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    const handleBeforeUnload = () => {
       if (!submitted && sessionStartTime && sessionId) {
         navigator.sendBeacon('/api/mcdonalds/leave-log', JSON.stringify({
           sessionId,
@@ -123,29 +123,6 @@ export default function McDStyledPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [sessionId, sessionStartTime, submitted, email]);
   
-
-  // E-Mail Eingabe ändern
-  const handleEmailChange = async (value: string) => {
-    setEmail(value);
-    setEmailAttempts(prev => prev + 1);
-
-    const hasAt = value.includes('@');
-    const lengthOK = value.length >= 5;
-    const isValidFragment = hasAt && lengthOK;
-
-    await fetch('/api/mcdonalds/log-email-quality', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        emailFragment: value,
-        isValidFragment,
-        attemptNumber: emailAttempts + 1,
-        timestamp: Date.now(),
-      }),
-    });
-  };
-
   // Absenden (Gewinnspiel-Teilnahme)
   const handleSubmit = async () => {
     if (!decisionStart || !sessionStartTime) return;
@@ -201,10 +178,6 @@ export default function McDStyledPage() {
     setSubmitted(true);
   };
   
-  
-
-
-  
   return (
     <>
       {/* Navigation */}
@@ -247,7 +220,7 @@ export default function McDStyledPage() {
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-extrabold mb-6">Unsere aktuellen Angebote</h1>
           <p className="text-base mb-2">
-            Dich und deine Lieben lächeln zu sehen, bedeutet uns bei McDonald’s® einfach alles! Wenn du auf der Suche nach etwas Besonderem bist, dann ist dies die richtige Seite für dich!
+            Dich und deine Lieben lächeln zu sehen, bedeutet uns bei McDonalds® einfach alles! Wenn du auf der Suche nach etwas Besonderem bist, dann ist dies die richtige Seite für dich!
           </p>
           <p className="text-base mb-8">
             Gewinne einen exklusiven Gutschein für dein nächstes Menü. Schnell sein lohnt sich!
@@ -262,7 +235,7 @@ export default function McDStyledPage() {
                 Gewinnspiel
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-[#DA291C]">
-                Gewinne deinen 10 € McDonald's Gutschein!
+                Gewinne deinen 10 € McDonalds Gutschein!
             </h2>
             <p className="text-gray-700">
                 Trag hier deine E-Mail ein – mit ein wenig Glück gehört der Gutschein bald dir!
@@ -317,21 +290,21 @@ export default function McDStyledPage() {
                         });
                         }
                     }}
-                    onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                        const value = e.target.value;
+                    onBlur={({ target }: React.FocusEvent<HTMLInputElement>) => {
+                        const value = target.value;
                         if (sessionId) {
-                        fetch('/api/mcdonalds/log-blur', {
+                          fetch('/api/mcdonalds/log-blur', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                            sessionId,
-                            email: value,
-                            action: 'blur',
-                            timestamp: Date.now(),
+                              sessionId,
+                              email: value,
+                              action: 'blur',
+                              timestamp: Date.now(),
                             }),
-                        });
+                          });
                         }
-                    }}
+                      }}             
                     placeholder="z. B. max@burger.de"
                     className="w-full border border-gray-300 rounded-lg px-4 py-2"
                     />
@@ -377,7 +350,7 @@ export default function McDStyledPage() {
                     Wähl deine Lieblings-Combo für nur Fr. 5.-
                 </h3>
                 <p className="text-gray-700 mb-4">
-                    Das klingt schon fast zu gut, um wahr zu sein. Aber mit den 2for5Deals bekommst du tatsächlich zwei feine McDonald’s-Produkte zum Mini-Preis von nur Fr. 5.–. Wir wünschen guten Appetit.
+                    Das klingt schon fast zu gut, um wahr zu sein. Aber mit den 2for5Deals bekommst du tatsächlich zwei feine McDonalds® -Produkte zum Mini-Preis von nur Fr. 5.–. Wir wünschen guten Appetit.
                 </p>
                 <button className="bg-[#FFC72C] hover:bg-[#e6b421] text-black font-semibold py-2 px-4 rounded transition">
                     Jetzt geniessen!
@@ -415,7 +388,7 @@ export default function McDStyledPage() {
                         <li>Unsere Geschichte</li>
                         <li>Franchising</li>
                         <li>Qualität</li>
-                        <li>AGB's</li>
+                        <li>AGBs</li>
                         <li>Datenschutz</li>
                         <li>Impressum</li>
                         <li>Vorsicht vor Phishing-Fallen</li>
@@ -470,28 +443,29 @@ export default function McDStyledPage() {
                     </div>
                 </div>
 
-                {/* Socials & App Stores */}
-                <div className="max-w-7xl mx-auto px-4 pb-12 flex flex-col md:flex-row justify-between items-center gap-6 border-t pt-8">
-                    <div className="flex space-x-4">
-                    <a href="#"><img src="/facebook.png" alt="Facebook" className="h-6 w-6" /></a>
-                    <a href="#"><img src="/x.png" alt="X/Twitter" className="h-6 w-6" /></a>
-                    <a href="#"><img src="/youtube.png" alt="YouTube" className="h-6 w-6" /></a>
-                    <a href="#"><img src="/instagram.png" alt="Instagram" className="h-6 w-6" /></a>
-                    </div>
-                    <div className="flex space-x-4">
-                    <img src="/appstore.png" alt="App Store" className="h-10" />
-                    <img src="/googleplay.png" alt="Google Play" className="h-10" />
-                    </div>
-                </div>
+            {/* Socials & App Stores */}
+            <div className="max-w-7xl mx-auto px-4 pb-12 flex flex-col md:flex-row justify-between items-center gap-6 border-t pt-8">
+            <div className="flex space-x-4">
+                <Image src="/facebook.png" alt="Facebook" width={24} height={24} />
+                <Image src="/x.png" alt="X/Twitter" width={24} height={24} />
+                <Image src="/youtube.png" alt="YouTube" width={24} height={24} />
+                <Image src="/instagram.png" alt="Instagram" width={24} height={24} />
+            </div>
+            <div className="flex space-x-4">
+                <Image src="/appstore.png" alt="App Store" width={80} height={30} />
+                <Image src="/googleplay.png" alt="Google Play" width={80} height={30} />
+            </div>
+            </div>
 
-                {/* Copyright */}
-                <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center text-xs text-gray-500 border-t">
-                    <div className="flex items-center space-x-1">
-                    <img src="/mcd-logo.png" alt="McDonald's" className="h-4" />
-                    <span>®</span>
-                    </div>
-                    <span>© 2025 McDonald’s®. Alle Rechte vorbehalten.</span>
-                </div>
+            {/* Copyright */}
+            <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center text-xs text-gray-500 border-t">
+            <div className="flex items-center space-x-1">
+                <Image src="/mcd-logo.png" alt="McDonald's" width={16} height={16} />
+                <span>®</span>
+            </div>
+            <span>© 2025 McDonalds® . Alle Rechte vorbehalten.</span>
+            </div>
+
             </footer>
         </div>
       </main>
