@@ -66,6 +66,15 @@ npm install bcryptjs
 npm install --save-dev @types/bcryptjs
 ```
 
+```bash
+npm install qrcode.react
+```
+
+```bash
+npm install uuid
+npm install --save-dev @types/uuid
+```
+
 ---
 
 ### `.env.local` erstellen

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
-import supabase from "@/lib/supabase";
+import supabase from "@/lib/supabaseAdmin";
 
 export async function POST(req: Request) {
   const { password } = await req.json();
