@@ -1,13 +1,29 @@
 'use client';
-
+import { Analytics } from "@vercel/analytics/react"
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function McDStyledPage() {
     useEffect(() => {
-    fetch('/api/mcdonalds/tracking');
-    }, []);
+        const sendTracking = async () => {
+          try {
+            await fetch('/api/mcdonalds/tracking', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userAgent: navigator.userAgent,
+                referrer: document.referrer || 'direkt',
+              }),
+            });
+          } catch (error) {
+            console.error('Fehler beim Tracking:', error);
+          }
+        };
+      
+        sendTracking();
+      }, []);
+      
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [sessionId, setSessionId] = useState('');
@@ -452,8 +468,8 @@ export default function McDStyledPage() {
                 <Image src="/instagram.png" alt="Instagram" width={24} height={24} />
             </div>
             <div className="flex space-x-4">
-                <Image src="/appstore.png" alt="App Store" width={80} height={30} />
-                <Image src="/googleplay.png" alt="Google Play" width={80} height={30} />
+                <Image src="/appstore.png" alt="App Store" width={100} height={30} />
+                <Image src="/googleplay.png" alt="Google Play" width={100} height={30} />
             </div>
             </div>
 
@@ -469,6 +485,7 @@ export default function McDStyledPage() {
             </footer>
         </div>
       </main>
+      <Analytics />
     </>
   );
 }
