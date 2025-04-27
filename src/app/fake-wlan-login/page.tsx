@@ -10,7 +10,7 @@ export default function WlanLoginPage() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const bitlyLink = "https://bit.ly/3RCCQjG";
+  //const bitlyLink = "https://bit.ly/3RCCQjG";
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -97,8 +97,9 @@ export default function WlanLoginPage() {
               <p className="text-center text-xs text-gray-600 mt-2">
                 Bitte melden Sie sich an, um auf das Internet zuzugreifen.
               </p>
-              <p className="text-center text-xs text-gray-400 mt-4 break-words">
-                Zugriff über: <a href={bitlyLink} target="_blank" className="underline">{bitlyLink}</a>
+              <p className="text-center text-sm text-gray-800">
+                Sie sind dabei auf diesen Dienst zuzugreifen: <br />
+                <span className="font-bold">moodle.heilbronn.dhbw.de</span>
               </p>
             </>
           ) : (
