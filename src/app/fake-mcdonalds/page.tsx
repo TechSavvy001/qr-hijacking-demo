@@ -199,7 +199,7 @@ export default function McDStyledPage() {
       <nav className="w-full bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-2 text-sm">
           {/* Left Section */}
-          <div className="flex items-center gap-6">
+          <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center px-4 py-2 text-sm gap-2">
             <Image src="/mcd-logo.png" alt="McDonald's Logo" width={80} height={80} />
             <div className="flex items-center gap-1">
               <span>Sprache</span>
@@ -231,10 +231,10 @@ export default function McDStyledPage() {
       </nav>
 
       {/* Inhalt */}
-      <main className="min-h-screen bg-white px-4 py-12 font-sans text-black">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-extrabold mb-6">Unsere aktuellen Angebote</h1>
-          <p className="text-base mb-2">
+      <main className="min-h-screen bg-white px-4 py-8 sm:py-12 font-sans text-black">
+        <div className="max-w-5xl mx-auto space-y-8">
+        <h1 className="text-3xl sm:text-4xl font-extrabold">Unsere aktuellen Angebote</h1>
+        <p className="text-base mb-2">
             Dich und deine Lieben lächeln zu sehen, bedeutet uns bei McDonalds® einfach alles! Wenn du auf der Suche nach etwas Besonderem bist, dann ist dies die richtige Seite für dich!
           </p>
           <p className="text-base mb-8">
