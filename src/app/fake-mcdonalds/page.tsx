@@ -1,5 +1,4 @@
 'use client';
-import { Analytics } from "@vercel/analytics/react"
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
@@ -485,7 +484,6 @@ export default function McDStyledPage() {
             </footer>
         </div>
       </main>
-      <Analytics />
     </>
   );
 }
