@@ -8,20 +8,15 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { sessionId } = body;
 
-  const { error } = await supabase.from('fingerprint_log').insert({
-    session_id: sessionId,
-    user_agent: body.userAgent,
-    lang: body.lang,
-    screen_width: body.screen.width,
-    screen_height: body.screen.height,
-    referrer: body.referrer || '',
-    timestamp: new Date(body.timestamp).toISOString(),
+  const { error } = await supabase.from('session_duration_logs').insert({
+    session_id: body.sessionId,
+    time_on_page_ms: body.timeOnPageMs,
+    completed: body.completed,
   });
 
   if (error) {
-    console.error(error);
+    console.error('Fehler beim Speichern der Sessiondauer:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 

@@ -8,8 +8,10 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  const { sessionId } = body;
 
   const { error } = await supabase.from('email_blur_log').insert({
+    session_id: sessionId,
     email: body.email,
     action: body.action,
     timestamp: new Date(body.timestamp).toISOString(), // <<< nicht body.time
