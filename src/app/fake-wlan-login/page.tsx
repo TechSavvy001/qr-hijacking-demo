@@ -91,17 +91,15 @@ export default function WlanLoginPage() {
 
           {!isConnected ? (
             <>
-              <p className="text-center text-sm text-gray-800">
-                Willkommen beim Campus WLAN der DHBW Heilbronn
-              </p>
-              <p className="text-center text-xs text-gray-600 mt-2">
-                Bitte melden Sie sich an, um auf das Internet zuzugreifen.
-              </p>
-              <p className="text-center text-sm text-gray-800">
-                Sie sind dabei auf diesen Dienst zuzugreifen: <br />
-                <span className="font-bold">moodle.heilbronn.dhbw.de</span>
-              </p>
-            </>
+            <p className="text-center text-md text-gray-800">
+              Willkommen im Campus WLAN der DHBW Heilbronn
+            </p>
+            <p className="text-center text-sm text-gray-800 mt-4">
+              Bitte authentifizieren Sie sich, um eine sichere Internetverbindung über <span className="font-semibold">DHBW-Campus-WLAN</span> herzustellen.
+            </p>
+            
+          </>
+          
           ) : (
             <p className="text-center text-lg font-semibold text-green-700 mt-6">
               Verbindung erfolgreich!<br />

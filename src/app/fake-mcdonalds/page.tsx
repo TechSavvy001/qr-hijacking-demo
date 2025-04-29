@@ -234,7 +234,7 @@ export default function McDStyledPage() {
       <main className="min-h-screen bg-white px-4 py-8 sm:py-12 font-sans text-black">
         <div className="max-w-5xl mx-auto space-y-8">
         <h1 className="text-3xl sm:text-4xl font-extrabold">Unsere aktuellen Angebote</h1>
-        <p className="text-base mb-2">
+          <p className="text-base mb-2">
             Dich und deine Lieben lächeln zu sehen, bedeutet uns bei McDonalds® einfach alles! Wenn du auf der Suche nach etwas Besonderem bist, dann ist dies die richtige Seite für dich!
           </p>
           <p className="text-base mb-8">
@@ -467,8 +467,8 @@ export default function McDStyledPage() {
                 <Image src="/instagram.png" alt="Instagram" width={24} height={24} />
             </div>
             <div className="flex space-x-4">
-                <Image src="/appstore.png" alt="App Store" width={100} height={30} />
-                <Image src="/googleplay.png" alt="Google Play" width={100} height={30} />
+                <Image src="/appstore.png" alt="App Store" width={110} height={30} />
+                <Image src="/googleplay.png" alt="Google Play" width={110} height={30} />
             </div>
             </div>
 
