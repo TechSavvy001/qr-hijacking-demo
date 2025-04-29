@@ -1,9 +1,10 @@
-// lib/supabaseAdmin.ts
-import { createClient } from '@supabase/supabase-js';
+// lib/supabase.ts
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY! // Wichtig: NICHT ANON_KEY!
+// Dies ist der Supabase-Client für den Client
+const supabaseClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!, // Achte darauf, dass dies in .env.local definiert ist
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export default supabaseAdmin;
+export default supabaseClient;
