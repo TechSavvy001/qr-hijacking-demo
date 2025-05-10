@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import Image from 'next/image';
 
 
 function Navbar() {
@@ -42,26 +43,26 @@ export default function Webinar() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setMessage('Passwörter stimmen nicht überein.');
       return;
     }
-
+  
     try {
       const response = await fetch('/api/webinar/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
-
+  
       setMessage(response.ok ? 'Anmeldung erfolgreich! Du erhältst eine Bestätigungsmail.' : 'Fehler bei der Anmeldung.');
     } catch {
       setMessage('Serverfehler. Bitte später erneut versuchen.');
     }
   };
-
+  
   return (
     <div>
       <Navbar />
@@ -149,16 +150,17 @@ export default function Webinar() {
         <section className="space-y-8">
         <h2 className="text-2xl font-semibold mt-8">Unsere Referenten:</h2>
         <div className="flex space-x-8 items-center mt-6">
-          <div className="text-center">
-            <img src="/angela_schurr.jpg" alt="Angela Schurr" className="w-60 h-60 rounded-full object-cover mb-2" loading="lazy" />
+
+            <div className="text-center">
+            <Image src="/angela_schurr.jpg" alt="Angela Schurr" width={240} height={240} className="rounded-full object-cover mb-2" />
             <p className="text-gray-700 font-semibold">Angela Schurr</p>
             <p className="text-gray-500 text-sm">Bereichsleiterin KI</p>
-          </div>
-          <div className="text-center">
-            <img src="/luis_beckmann.jpg" alt="Luis Beckmann" className="w-60 h-60 rounded-full object-cover mb-2" loading="lazy" />
+            </div>
+            <div className="text-center">
+            <Image src="/luis_beckmann.jpg" alt="Luis Beckmann" width={240} height={240} className="rounded-full object-cover mb-2" />
             <p className="text-gray-700 font-semibold">Luis Beckmann</p>
             <p className="text-gray-500 text-sm">KI-Consultant</p>
-          </div>
+            </div>
         </div>
 
         </section>
