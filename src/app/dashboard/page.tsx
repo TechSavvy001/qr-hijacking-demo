@@ -216,9 +216,9 @@ if (webinarRegistrationError) {
 
           </div>
           <div>
-          
+          <h2 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Webinar Registrations</h2>
           <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
-          <h2 className="text-2xl font-semibold mb-4 ">Webinar Registrations</h2>
+          
             <Table>
               <TableCaption >Webinar Registrierungen</TableCaption>
               <TableHeader>
@@ -245,6 +245,7 @@ if (webinarRegistrationError) {
           </div>
         
         </div>
+        <h2 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Fake W-Lan</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 xl:grid-cols-3 px-4">
             <PieChartComponent />
             <PieChartBrowserComponent />
