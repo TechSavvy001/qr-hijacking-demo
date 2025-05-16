@@ -35,6 +35,7 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
+
   const { data: session_time_logs, error } = await supabaseClient
     .from("session_time_logs")
     .select("id, session_id, time_on_page_ms, completed");
@@ -125,6 +126,7 @@ console.error(
 );
 return <div>Fehler beim Laden der Email Input Daten.</div>;
 }
+
   return (
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto space-y-8">

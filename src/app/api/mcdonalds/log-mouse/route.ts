@@ -8,8 +8,10 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  const { sessionId } = body;
 
   const { error } = await supabase.from('mouse_move_log').insert({
+    session_id: sessionId,
     x: body.x,
     y: body.y,
     time_since_start: body.time,

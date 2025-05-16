@@ -75,6 +75,10 @@ npm install uuid
 npm install --save-dev @types/uuid
 ```
 
+```bash
+npm i @vercel/analytics
+```
+
 ---
 
 ### `.env.local` erstellen

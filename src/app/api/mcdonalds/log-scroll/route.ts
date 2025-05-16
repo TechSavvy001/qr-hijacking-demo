@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
 
   const { error } = await supabase.from('scroll_log').insert({
+    session_id: body.sessionId,  
     scroll_y: body.scrollY,
     time_since_start: body.time,
   });

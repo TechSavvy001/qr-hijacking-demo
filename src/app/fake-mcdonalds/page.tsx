@@ -1,13 +1,24 @@
 'use client';
-
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function McDStyledPage() {
-    useEffect(() => {
-    fetch('/api/mcdonalds/tracking');
-    }, []);
+  async function apiPost(url: string, data: Record<string, unknown>, sessionId: string) {
+    if (!sessionId) {
+      console.error('SessionId fehlt, Request wird nicht gesendet:', url);
+      return;
+    }
+  
+    const fullData = { ...data, sessionId };
+  
+    return fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(fullData),
+    });
+  }
+
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [sessionId, setSessionId] = useState('');
@@ -22,68 +33,72 @@ export default function McDStyledPage() {
     setSessionId(id);
     setDecisionStart(Date.now());
     setSessionStartTime(Date.now());
-
-    fetch('/api/mcdonalds/fingerprint', {
-        method: 'POST',
-        body: JSON.stringify({
-          userAgent: navigator.userAgent,
-          lang: navigator.language,
-          screen: {
-            width: window.screen.width,
-            height: window.screen.height
-          },
-          referrer: document.referrer,
-          timestamp: Date.now()
-        }),
-        headers: { 'Content-Type': 'application/json' }
-      });
   }, []);
 
-  // Klicks auf der Seite tracken (Buttons, Links)
+  // Tracking-Request, wenn Session da
+  useEffect(() => {
+    if (!sessionId) return;
+    const sendTracking = async () => {
+      try {
+        await apiPost('/api/mcdonalds/tracking', {
+          userAgent: navigator.userAgent,
+          referrer: document.referrer || 'direkt',
+        }, sessionId);
+      } catch (error) {
+        console.error('Fehler beim Tracking:', error);
+      }
+    };
+
+    const sendFingerprint = async () => {
+      await apiPost('/api/mcdonalds/fingerprint', {
+        userAgent: navigator.userAgent,
+        lang: navigator.language,
+        screen: {
+          width: window.screen.width,
+          height: window.screen.height
+        },
+        referrer: document.referrer,
+        timestamp: Date.now(),
+      }, sessionId);
+    };
+
+    sendTracking();
+    sendFingerprint();
+  }, [sessionId]);
+
+  // Klicks auf der Seite tracken
   useEffect(() => {
     const trackClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       setClickCount(prev => prev + 1);
-  
+
       if (sessionId) {
-        fetch('/api/mcdonalds/click-log', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId,
-            tagName: target.tagName,
-            text: target.innerText,
-            timestamp: Date.now(),
-          }),
-        });
-      }
-  
-      // Navigation Klicks erfassen
-      if (target.tagName === 'A' && sessionId) {
-        fetch('/api/mcdonalds/log-navigation', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            sessionId,
+        apiPost('/api/mcdonalds/click-log', {
+          tagName: target.tagName,
+          text: target.innerText,
+          timestamp: Date.now(),
+        }, sessionId);
+
+        if (target.tagName === 'A') {
+          apiPost('/api/mcdonalds/log-navigation', {
             linkText: target.innerText,
             href: (target as HTMLAnchorElement).href,
             timestamp: Date.now(),
-          }),
-        });
+          }, sessionId);
+        }
       }
     };
-  
+
     window.addEventListener('click', trackClick);
     return () => window.removeEventListener('click', trackClick);
   }, [sessionId]);
- 
 
   // Scrolltiefe tracken
   useEffect(() => {
     let lastScrollLog = 0;
     const logScroll = () => {
       const now = Date.now();
-      if (now - lastScrollLog < 1000) return; // Nur alle 1 Sekunde loggen
+      if (now - lastScrollLog < 1000) return;
       lastScrollLog = now;
 
       const scrollDepthPercent = Math.min(
@@ -91,15 +106,12 @@ export default function McDStyledPage() {
         1
       ) * 100;
 
-      fetch('/api/mcdonalds/log-scroll-depth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId,
+      if (sessionId) {
+        apiPost('/api/mcdonalds/log-scroll-depth', {
           scrollDepthPercent,
           timestamp: Date.now(),
-        }),
-      });
+        }, sessionId);
+      }
     };
 
     window.addEventListener('scroll', logScroll);
@@ -107,84 +119,81 @@ export default function McDStyledPage() {
   }, [sessionId]);
 
   // Seitenverlassen (Abbrucherkennung)
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (!submitted && sessionStartTime && sessionId) {
-        navigator.sendBeacon('/api/mcdonalds/leave-log', JSON.stringify({
+// Seitenverlassen (Abbrucherkennung)
+useEffect(() => {
+  const handleBeforeUnload = () => {
+    if (sessionId && sessionStartTime) {
+      // 1. Sessiondauer speichern (abgebrochen oder regulär)
+      const timeOnPageMs = Date.now() - sessionStartTime;
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon('/api/mcdonalds/log-session-duration', JSON.stringify({
           sessionId,
-          email,
-          action: 'left-before-submit',
-          timestamp: Date.now(),
+          timeOnPageMs,
+          completed: submitted, // true oder false je nach Absenden
         }));
+      } else {
+        apiPost('/api/mcdonalds/log-session-duration', {
+          timeOnPageMs,
+          completed: submitted,
+        }, sessionId);
       }
-    };
-  
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [sessionId, sessionStartTime, submitted, email]);
-  
-  // Absenden (Gewinnspiel-Teilnahme)
-  const handleSubmit = async () => {
-    if (!decisionStart || !sessionStartTime) return;
 
-    // Entscheidungsgeschwindigkeit loggen
-    await fetch('/api/mcdonalds/log-decision-speed', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        timeToSubmitMs: Date.now() - decisionStart,
-      }),
-    });
-
-    // Klicks bis Submit loggen
-    await fetch('/api/mcdonalds/log-click-to-submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        totalClicks: clickCount,
-      }),
-    });
-
-    // Session abschließen (completed)
-    await fetch('/api/mcdonalds/log-session-time', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId,
-        timeOnPageMs: Date.now() - sessionStartTime,
-        completed: true,
-      }),
-    });
-
-    // Gewinnspiel-Fake
-    await fetch('/api/mcdonalds/fake-input', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          sessionId,
-          type: 'gewinnspiel', 
-          email,
-          timestamp: Date.now()
-        }),
-      }).then(res => {
-        if (!res.ok) {
-          console.error('Error sending fake input');
+      // 2. Leave-Log speichern (nur wenn nicht abgesendet)
+      if (!submitted) {
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/api/mcdonalds/leave-log', JSON.stringify({
+            sessionId,
+            email,
+            action: 'left-before-submit',
+            timestamp: Date.now(),
+          }));
+        } else {
+          apiPost('/api/mcdonalds/leave-log', {
+            email,
+            action: 'left-before-submit',
+            timestamp: Date.now(),
+          }, sessionId);
         }
-      });
-      
+      }
+    }
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+  return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+}, [sessionId, sessionStartTime, submitted, email]);
+
+// Absenden (Gewinnspiel-Teilnahme)
+  const handleSubmit = async () => {
+    if (!decisionStart || !sessionStartTime || !sessionId) return;
+
+    await apiPost('/api/mcdonalds/log-decision-speed', {
+      timeToSubmitMs: Date.now() - decisionStart,
+    }, sessionId);
+
+    await apiPost('/api/mcdonalds/log-click-to-submit', {
+      totalClicks: clickCount,
+    }, sessionId);
+
+    await apiPost('/api/mcdonalds/log-session-time', {
+      timeOnPageMs: Date.now() - sessionStartTime,
+      completed: true,
+    }, sessionId);
+
+    await apiPost('/api/mcdonalds/fake-input', {
+      type: 'gewinnspiel',
+      email,
+      timestamp: Date.now(),
+    }, sessionId);
 
     setSubmitted(true);
-  };
-  
+  };  
   return (
     <>
       {/* Navigation */}
       <nav className="w-full bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-2 text-sm">
           {/* Left Section */}
-          <div className="flex items-center gap-6">
+          <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center px-4 py-2 text-sm gap-2">
             <Image src="/mcd-logo.png" alt="McDonald's Logo" width={80} height={80} />
             <div className="flex items-center gap-1">
               <span>Sprache</span>
@@ -216,9 +225,9 @@ export default function McDStyledPage() {
       </nav>
 
       {/* Inhalt */}
-      <main className="min-h-screen bg-white px-4 py-12 font-sans text-black">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-4xl font-extrabold mb-6">Unsere aktuellen Angebote</h1>
+      <main className="min-h-screen bg-white px-4 py-8 sm:py-12 font-sans text-black">
+        <div className="max-w-5xl mx-auto space-y-8">
+        <h1 className="text-3xl sm:text-4xl font-extrabold">Unsere aktuellen Angebote</h1>
           <p className="text-base mb-2">
             Dich und deine Lieben lächeln zu sehen, bedeutet uns bei McDonalds® einfach alles! Wenn du auf der Suche nach etwas Besonderem bist, dann ist dies die richtige Seite für dich!
           </p>
@@ -452,8 +461,8 @@ export default function McDStyledPage() {
                 <Image src="/instagram.png" alt="Instagram" width={24} height={24} />
             </div>
             <div className="flex space-x-4">
-                <Image src="/appstore.png" alt="App Store" width={80} height={30} />
-                <Image src="/googleplay.png" alt="Google Play" width={80} height={30} />
+                <Image src="/appstore.png" alt="App Store" width={110} height={30} />
+                <Image src="/googleplay.png" alt="Google Play" width={110} height={30} />
             </div>
             </div>
 
