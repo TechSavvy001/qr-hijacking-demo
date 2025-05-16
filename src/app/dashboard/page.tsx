@@ -230,7 +230,7 @@ return <div>Fehler beim Laden der Email Input Daten.</div>;
 
           </div>
           <div>
-          <h3 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Email Input Log</h3>
+          <h3 className=" font-semibold mb-4 px-4 pt-5 pb-2">Email Input Log</h3>
           <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
           <Card className="p-3">
             <Table>
@@ -259,7 +259,36 @@ return <div>Fehler beim Laden der Email Input Daten.</div>;
             </Table>
             </Card>
           </div>
-        
+          <h3 className=" font-semibold mb-4 px-4 pt-5 pb-2">Fake Mc Tracking</h3>
+          <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
+            <Table>
+              <TableCaption>Fake Mc Logs</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[150px]">Datum</TableHead>
+                  <TableHead className="w-[150px]">IP Adresse</TableHead>
+                  <TableHead className="w-[150px]">Gerätetyp</TableHead>
+                  <TableHead className="w-[150px]">Browser</TableHead>
+                  <TableHead className="w-[150px]">Betriebssystem</TableHead>
+                  <TableHead className="w-[150px]">Referrer</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tracking_log?.map((entry) => (
+                  <TableRow key={entry.id}>
+                    <TableCell>
+                      {new Date(entry.timestamp).toLocaleString()}
+                    </TableCell>
+                    <TableCell>{entry.ip_address}</TableCell>
+                    <TableCell>{entry.device_type}</TableCell>
+                    <TableCell>{entry.browser}</TableCell>
+                    <TableCell>{entry.os}</TableCell>
+                    <TableCell>{entry.referrer}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
   
           <div>
           <h2 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Webinar Registrations</h2>
@@ -302,38 +331,10 @@ return <div>Fehler beim Laden der Email Input Daten.</div>;
             <PieChartOsComponent />
           </div>
           
+          <h3 className=" font-semibold mb-4 px-4 pt-5 pb-2">Fake W-LAN Tracking</h3>
           <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
             <Table>
-              <TableCaption>Gewinnspiel Logs.</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[150px]">Datum</TableHead>
-                  <TableHead className="w-[150px]">IP Adresse</TableHead>
-                  <TableHead className="w-[150px]">Gerätetyp</TableHead>
-                  <TableHead className="w-[150px]">Browser</TableHead>
-                  <TableHead className="w-[150px]">Betriebssystem</TableHead>
-                  <TableHead className="w-[150px]">Referrer</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tracking_log?.map((entry) => (
-                  <TableRow key={entry.id}>
-                    <TableCell>
-                      {new Date(entry.timestamp).toLocaleString()}
-                    </TableCell>
-                    <TableCell>{entry.ip_address}</TableCell>
-                    <TableCell>{entry.device_type}</TableCell>
-                    <TableCell>{entry.browser}</TableCell>
-                    <TableCell>{entry.os}</TableCell>
-                    <TableCell>{entry.referrer}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-          <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
-            <Table>
-              <TableCaption>Fake-Moodle Logs.</TableCaption>
+              <TableCaption>Fake W-LAN Tracking</TableCaption>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[150px]">Datum</TableHead>
