@@ -102,6 +102,17 @@ if (webinarRegistrationError) {
   return <div>Fehler beim Laden der Webinar Daten.</div>;
 }
 
+const { data: email_input_log, error: emailInputLogError } =
+await supabaseClient
+  .from("email_input_log")
+  .select("*");
+if (emailInputLogError) {
+console.error(
+  "Supabase Error:",
+  emailInputLogError?.message || "Unknown error"
+);
+return <div>Fehler beim Laden der Email Input Daten.</div>;
+}
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
@@ -205,7 +216,6 @@ if (webinarRegistrationError) {
             </CardFooter>
           </Card>
         </div>
-        
         </div>
 
         <div>
@@ -215,14 +225,51 @@ if (webinarRegistrationError) {
             <PieChartOsFakeMcComponent />
 
           </div>
+
+
+
+          </div>
+          <div>
+          <h3 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Email Input Log</h3>
+          <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
+          <Card className="p-3">
+            <Table>
+              <TableCaption >Email Input Log</TableCaption>
+              
+              <TableHeader >
+                <TableRow >
+                <TableHead className="w-[150px]">Datum</TableHead>
+                <TableHead className="w-[150px]">Fragment</TableHead>
+
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {email_input_log?.map((entry) => (
+                  <TableRow key={entry.id}>
+                    <TableCell>
+                      {new Date(entry.timestamp).toLocaleString()}
+                    </TableCell>
+
+                    <TableCell>{entry.email_fragment}</TableCell>
+
+                  </TableRow>
+                ))}
+              </TableBody>
+            
+            </Table>
+            </Card>
+          </div>
+        
+  
           <div>
           <h2 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Webinar Registrations</h2>
           <div className="max-h-[300px] overflow-y-auto rounded-md border m-4">
-          
+          <Card className="p-3">
             <Table>
               <TableCaption >Webinar Registrierungen</TableCaption>
-              <TableHeader>
-                <TableRow>
+              
+              <TableHeader >
+                <TableRow >
                 <TableHead className="w-[150px]">Zeit</TableHead>
                   <TableHead className="w-[150px]">Name</TableHead>
                   <TableHead className="w-[150px]">E-Mail</TableHead>
@@ -241,10 +288,13 @@ if (webinarRegistrationError) {
                   </TableRow>
                 ))}
               </TableBody>
+            
             </Table>
+            </Card>
           </div>
         
         </div>
+        
         <h2 className="text-2xl font-semibold mb-4 px-4 pt-5 pb-2">Fake W-Lan</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 xl:grid-cols-3 px-4">
             <PieChartComponent />

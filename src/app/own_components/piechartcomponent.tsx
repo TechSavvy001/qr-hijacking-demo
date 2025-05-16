@@ -100,7 +100,7 @@ export function Component() {
                 innerRadius={60}
                 strokeWidth={5}
                 paddingAngle={5}
-                isAnimationActive={false} // Animation deaktivieren (optional)
+                isAnimationActive={true} // Animation deaktivieren (optional)
               >
                 {/* Die `Cell`-Komponenten müssen hier sicherstellen, dass die Farbe für jedes Segment gesetzt wird */}
                 {chartData.map((entry, index) => (
